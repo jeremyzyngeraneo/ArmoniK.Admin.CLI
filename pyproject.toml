@@ -14,7 +14,7 @@ classifiers = [
 ]
 dependencies = [
     "armonik==3.14.0",
-    "docopt"
+    "docopt>=0.6.2"
 ]
 dynamic = ["version"]
 

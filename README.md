@@ -42,9 +42,17 @@ pip install dist/name_of_the_archive.whl
 ```
 
 ### You can also automate these steps using the install_cli.sh script from the root directory :
+
+This script will install python modules in a [venv](https://docs.python.org/3/library/venv.html) to avoid overwhelming your global environment
+
 ```
 chmod +x ./tools/install_cli.sh
 ./tools/install_cli.sh
+```
+
+Don't forget to activate the virtual environment before using the CLI
+```
+source ./venv/bin/activate
 ```
 
 ## Documentation
