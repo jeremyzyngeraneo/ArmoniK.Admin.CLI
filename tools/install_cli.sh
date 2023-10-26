@@ -6,6 +6,9 @@ os_name=$(cat /etc/os-release | grep "^ID_LIKE=" | cut -d "=" -f 2)
 # If OS is debian-like (Debian or Ubuntu) then install venv
 if [ $os_name == "debian" ]; then
     sudo apt install python3-venv
+else 
+    echo distribution not supported
+    exit 1
 fi
 
 if [ ! -d "venv" ]; then
