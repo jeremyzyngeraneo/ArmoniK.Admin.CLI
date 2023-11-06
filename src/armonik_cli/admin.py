@@ -28,10 +28,11 @@ Options:
 
 from docopt import docopt
 import grpc
-from armonik.client.sessions import ArmoniKSessions, SessionFieldFilter
+from armonik.client.sessions import ArmoniKSessions, SessionFieldFilter, TaskOptions
 from armonik.client.tasks import ArmoniKTasks, TaskFieldFilter
 from armonik.common.enumwrapper import TASK_STATUS_ERROR, TASK_STATUS_CREATING , SESSION_STATUS_RUNNING, SESSION_STATUS_CANCELLED, SESSION_STATUS_UNSPECIFIED
 from armonik.common.filter import Filter
+from datetime import timedelta
 
 def create_channel(arguments):
     """
@@ -175,6 +176,9 @@ def main():
     grpc_channel = create_channel(arguments)
     session_client = ArmoniKSessions(grpc_channel)
     task_client = ArmoniKTasks(grpc_channel)
+
+    b = TaskOptions(max_duration=timedelta(0,3),priority=1, max_retries=10)
+    new_session = session_client.create_session(b)
 
     if arguments['list-session']:
         list_sessions(session_client, create_session_filter(arguments["--all"], arguments["--running"], arguments["--cancelled"]))
