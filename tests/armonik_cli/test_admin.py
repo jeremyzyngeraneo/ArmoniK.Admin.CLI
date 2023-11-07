@@ -1,13 +1,10 @@
-
-
 import armonik_cli.admin as admin
 from armonik.client.sessions import ArmoniKSessions, SessionFieldFilter, TaskOptions
 from armonik.client.tasks import ArmoniKTasks, TaskFieldFilter
 from armonik.common.filter import Filter
 from datetime import timedelta
 import pytest
-# def test_list_session():
-#     assert 5 == 6
+
 
 grpc_channel = admin.create_channel({'--endpoint' : 'localhost:5001', '--ca' : None})
 session_client = ArmoniKSessions(grpc_channel)
@@ -48,20 +45,18 @@ def test_list_running_sessions():
     assert sessions is not None
     assert len(sessions) > 0 
 
+def test_cancel_sessions():
+    TaskOptions(max_duration=timedelta(0,3),priority=1, max_retries=10)
+    sessions = admin.list_sessions(session_client, admin.create_session_filter(False, True, False))
+    admin.cancel_sessions(session_client, sessions)
+    update_sessions = admin.list_sessions(session_client, admin.create_session_filter(False, True, False))
+    assert len(update_sessions) == 0
+    
 def test_list_cancelled_sessions():
     sessions = admin.list_sessions(session_client, admin.create_session_filter(False, False, True))
     assert sessions is not None
     assert len(sessions) > 0 
-
-# def test_cancel_sessions():
-#     sessions = admin.list_sessions(session_client, admin.create_session_filter(False, True, False))
-#     print(sessions)
-#     admin.cancel_sessions(session_client, sessions)
     
-    
-
-    
-
 
 
  
