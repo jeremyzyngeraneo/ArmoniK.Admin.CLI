@@ -85,16 +85,20 @@ def list_sessions(client: ArmoniKSessions, session_filter: Filter):
         client (ArmoniKSessions): ArmoniKSessions instance for session management
         session_filter (Filter) : Filter for the session
     """
+    result = []
     page = 0
     sessions = client.list_sessions(session_filter, page=page)
     
     while len(sessions[1]) > 0:
         for session in sessions[1]:
             print(f'Session ID: {session.session_id}')
+            result.append(session.session_id)
+
         page += 1
         sessions = client.list_sessions(session_filter, page=page)
 
     print(f'\nNumber of sessions: {sessions[0]}\n')
+    return result
 
 
 def cancel_sessions(client: ArmoniKSessions, sessions: list):
@@ -176,9 +180,6 @@ def main():
     grpc_channel = create_channel(arguments)
     session_client = ArmoniKSessions(grpc_channel)
     task_client = ArmoniKTasks(grpc_channel)
-
-    b = TaskOptions(max_duration=timedelta(0,3),priority=1, max_retries=10)
-    new_session = session_client.create_session(b)
 
     if arguments['list-session']:
         list_sessions(session_client, create_session_filter(arguments["--all"], arguments["--running"], arguments["--cancelled"]))
